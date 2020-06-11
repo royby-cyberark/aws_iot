@@ -139,13 +139,17 @@ if __name__ == '__main__':
 
     connect_future = mqtt_connection.connect()
 
+    print("\n\n\n")
     input("Press Enter to connect...")
+    print("\n\n")
 
     # Future.result() waits until a result is available
     connect_future.result()
-    print("Connected!")
 
-    input("Press Enter to continue...")
+    print("*********************")
+    print("Connected to backend")
+    print("*********************")
+    print("\n\n")
 
     # Subscribe
     print("Subscribing to topic '{}'...".format(args.topic))
@@ -171,33 +175,27 @@ if __name__ == '__main__':
         else:
             print ("Sending {} message(s)".format(args.count))
 
-        # args.message = '{ "msgNum": 1, "timestamp": "123456789", "details": "audit details", "tenant_id": "tenant42", "psm": { "command": "sudo whatever"} }'
+        print("\n\n")
 
-        args.message = '''{ 
-            "msgNum": 257,
-            "timestamp": 123456789,
-            "details": "audit details",
-            "tenant_id": "tenant42",
-            "psm": {
-                "command": "sudo something"
-            }
-        }'''
+        tenant_id = "tenant43"
+        print("Tenant id is: ", tenant_id)
+        print("\n")
+        audit_details = input("Enter audit details: ")
+
+        print("\n\n")
 
         my_message_dict = {
-            "msgNum": 258,
+            "msgNum": 259,
             "timestamp": 123456789,
-            "details": "Thank you all for the help! it works! IoT FTW!",
-            "tenant_id": "tenant42",
+            "details": audit_details,
+            "tenant_id": tenant_id,
             "psm": {
-                "command": "sudo something"
+                "command": "rm -rf /"
             }
         }
 
-
         publish_count = 1
         while (publish_count <= args.count) or (args.count == 0):
-            # message = "{} [{}]".format(args.message, publish_count)
-            # message = args.message
             message = json.dumps(my_message_dict)
             print("Publishing message to topic '{}': {}".format(args.topic, message))
             mqtt_connection.publish(
